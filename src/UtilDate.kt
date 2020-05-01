@@ -43,20 +43,20 @@ fun isHoliday(currentDate: LocalDate): Boolean {
     return holidaysMock.contains(currentDate)
 }
 
-fun numberBusinessDaysUntilCurrentDate(referenceDate: LocalDate, holidaysMock: List<LocalDate>): Long {
-
-    val currentDateMock = LocalDate.of(2017, 2, 28) // Fake
-    var dateAfterCalc = LocalDate.of(referenceDate.year, referenceDate.month, referenceDate.dayOfMonth)
+// Working in progress... Dont use yet!
+fun numberBusinessDaysUntilCurrentDate(referenceDate: LocalDate): Long {
+    val currentDate = LocalDate.now()
+    var dateReferenceToCalc = LocalDate.of(referenceDate.year, referenceDate.month, referenceDate.dayOfMonth)
 
     var counting = TERM_IN_DAYS
 
-    while (dateAfterCalc.isBefore(currentDateMock)) {
+    while (dateReferenceToCalc.isBefore(currentDate)) {
 
-        if (!isWeekend(dateAfterCalc) || isHoliday(dateAfterCalc)) {
+        if (!isWeekend(dateReferenceToCalc) || isHoliday(dateReferenceToCalc)) {
             counting--
         }
 
-        dateAfterCalc = dateAfterCalc.plusDays(1)
+        dateReferenceToCalc = dateReferenceToCalc.plusDays(1)
     }
 
     return counting
