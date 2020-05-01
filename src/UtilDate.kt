@@ -1,65 +1,63 @@
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.util.ArrayList
 
-const val PRAZO_CIENCIA: Long = 5L
+const val TERM_IN_DAYS: Long = 5L
 
-fun dateAfterBusinessDaysFrom(dataReferencia: LocalDate): LocalDate {
+fun dateAfterBusinessDaysFrom(referenceDate: LocalDate): LocalDate {
 
-    var prazoReal = dataReferencia.plusDays(PRAZO_CIENCIA)
-    var dataAposContagem = LocalDate.of(dataReferencia.year, dataReferencia.month, dataReferencia.dayOfMonth)
-    var (numeroDiasChecados, numeroDiasSemExpediente) = listOf(0, 0)
+    var realTerm = referenceDate.plusDays(TERM_IN_DAYS)
+    var dateAfterCalc = LocalDate.of(referenceDate.year, referenceDate.month, referenceDate.dayOfMonth)
+    var (numberDaysChecked, numberOfDaysWithoutOfficeHours) = listOf(0, 0)
     do {
-        dataAposContagem = dataAposContagem.plusDays(1)
+        dateAfterCalc = dateAfterCalc.plusDays(1)
 
-        if (ehDiaSemExpedienteTCU(dataAposContagem) && numeroDiasChecados == numeroDiasSemExpediente) {
-            prazoReal = prazoReal.plusDays(1)
-            numeroDiasSemExpediente++
+        if (isDayOffBy(dateAfterCalc) &&
+            numberDaysChecked == numberOfDaysWithoutOfficeHours) {
+            realTerm = realTerm.plusDays(1)
+            numberOfDaysWithoutOfficeHours++
         }
-        numeroDiasChecados++
-    } while (dataAposContagem.isBefore(prazoReal))
+        numberDaysChecked++
+    } while (dateAfterCalc.isBefore(realTerm))
 
-    return proximoDiaComExpedienteTCU(dataAposContagem)
+    return nextDayWithOfficeHours(dateAfterCalc)
 }
 
-fun proximoDiaComExpedienteTCU(data:LocalDate): LocalDate = if (!ehDiaSemExpedienteTCU(data) ) data else {
-    var proximaData = LocalDate.of(data.year, data.month, data.dayOfMonth)
-    while (ehDiaSemExpedienteTCU(proximaData))
-        proximaData = proximaData.plusDays(1)
-    proximaData
+fun nextDayWithOfficeHours(someDate:LocalDate): LocalDate = if (!isDayOffBy(someDate) ) someDate else {
+    var nextDate = LocalDate.of(someDate.year, someDate.month, someDate.dayOfMonth)
+    while (isDayOffBy(nextDate))
+        nextDate = nextDate.plusDays(1)
+    nextDate
 }
 
-fun ehDiaSemExpedienteTCU(data:LocalDate):Boolean = eFimDeSemana(data) || eFeriado(data)
+fun isDayOffBy(someDate:LocalDate):Boolean = isWeekend(someDate) || isHoliday(someDate)
 
-fun eFimDeSemana(dataCorrente: LocalDate): Boolean {
+fun isWeekend(dataCorrente: LocalDate): Boolean =
+    dataCorrente.dayOfWeek == DayOfWeek.SATURDAY || dataCorrente.dayOfWeek == DayOfWeek.SUNDAY
 
-    return dataCorrente.dayOfWeek == DayOfWeek.SATURDAY || dataCorrente.dayOfWeek == DayOfWeek.SUNDAY
+
+fun isHoliday(currentDate: LocalDate): Boolean {
+    val holidaysMock = listOf(
+        LocalDate.of(2019, 11, 15),
+        LocalDate.of(2019, 11, 2)
+    )
+    return holidaysMock.contains(currentDate)
 }
 
-fun eFeriado(dataCorrente: LocalDate): Boolean {
-    val feriados = ArrayList<LocalDate>()
-    feriados.add(LocalDate.of(2019, 11, 15))
-    feriados.add(LocalDate.of(2019, 11, 2))
+fun numberBusinessDaysUntilCurrentDate(referenceDate: LocalDate, holidaysMock: List<LocalDate>): Long {
 
-    return feriados.contains(dataCorrente)
-}
+    val currentDateMock = LocalDate.of(2017, 2, 28) // Fake
+    var dateAfterCalc = LocalDate.of(referenceDate.year, referenceDate.month, referenceDate.dayOfMonth)
 
-fun obterDiasUteisAteDataCorrente(dataReferencia: LocalDate, feriados: List<LocalDate>): Long {
+    var counting = TERM_IN_DAYS
 
-    val dataAtual = LocalDate.of(2017, 2, 28) // Fake
-    var dataAposContagem = LocalDate.of(dataReferencia.year, dataReferencia.month, dataReferencia.dayOfMonth)
+    while (dateAfterCalc.isBefore(currentDateMock)) {
 
-    var contagemRegional = PRAZO_CIENCIA
-
-    while (dataAposContagem.isBefore(dataAtual)) {
-
-        if (!(eFimDeSemana(dataAposContagem) || eFeriado(dataAposContagem))) {
-            contagemRegional--
+        if (!isWeekend(dateAfterCalc) || isHoliday(dateAfterCalc)) {
+            counting--
         }
 
-
-        dataAposContagem = dataAposContagem.plusDays(1)
+        dateAfterCalc = dateAfterCalc.plusDays(1)
     }
 
-    return contagemRegional
+    return counting
 }
