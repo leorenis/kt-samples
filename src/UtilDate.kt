@@ -4,7 +4,7 @@ import java.util.ArrayList
 
 const val PRAZO_CIENCIA: Long = 5L
 
-fun obterPrazoEmDiasUteis(dataReferencia: LocalDate): LocalDate {
+fun dateAfterBusinessDaysFrom(dataReferencia: LocalDate): LocalDate {
 
     var prazoReal = dataReferencia.plusDays(PRAZO_CIENCIA)
     var dataAposContagem = LocalDate.of(dataReferencia.year, dataReferencia.month, dataReferencia.dayOfMonth)
