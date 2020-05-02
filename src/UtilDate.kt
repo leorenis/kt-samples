@@ -4,7 +4,6 @@ import java.time.LocalDate
 const val TERM_IN_DAYS: Long = 5L
 
 fun dateAfterBusinessDaysFrom(referenceDate: LocalDate): LocalDate {
-
     var realTerm = referenceDate.plusDays(TERM_IN_DAYS)
     var dateAfterCalc = LocalDate.of(referenceDate.year, referenceDate.month, referenceDate.dayOfMonth)
     var (numberDaysChecked, numberOfDaysWithoutOfficeHours) = listOf(0, 0)
@@ -34,7 +33,6 @@ fun isDayOffBy(someDate:LocalDate):Boolean = isWeekend(someDate) || isHoliday(so
 fun isWeekend(dataCorrente: LocalDate): Boolean =
     dataCorrente.dayOfWeek == DayOfWeek.SATURDAY || dataCorrente.dayOfWeek == DayOfWeek.SUNDAY
 
-
 fun isHoliday(currentDate: LocalDate): Boolean {
     val holidaysMock = listOf(
         LocalDate.of(2019, 11, 15),
@@ -47,15 +45,11 @@ fun isHoliday(currentDate: LocalDate): Boolean {
 fun numberBusinessDaysUntilCurrentDate(referenceDate: LocalDate): Long {
     val currentDate = LocalDate.now()
     var dateReferenceToCalc = LocalDate.of(referenceDate.year, referenceDate.month, referenceDate.dayOfMonth)
-
     var counting = TERM_IN_DAYS
-
     while (dateReferenceToCalc.isBefore(currentDate)) {
-
         if (!isWeekend(dateReferenceToCalc) || isHoliday(dateReferenceToCalc)) {
             counting--
         }
-
         dateReferenceToCalc = dateReferenceToCalc.plusDays(1)
     }
 
