@@ -1,3 +1,5 @@
+package businessday
+
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -21,7 +23,7 @@ fun dateAfterBusinessDaysFrom(referenceDate: LocalDate): LocalDate {
     return nextDayWithOfficeHours(dateAfterCalc)
 }
 
-fun nextDayWithOfficeHours(someDate:LocalDate): LocalDate = if (!isDayOffBy(someDate) ) someDate else {
+fun nextDayWithOfficeHours(someDate:LocalDate): LocalDate = if (!isDayOffBy(someDate)) someDate else {
     var nextDate = LocalDate.of(someDate.year, someDate.month, someDate.dayOfMonth)
     while (isDayOffBy(nextDate))
         nextDate = nextDate.plusDays(1)
