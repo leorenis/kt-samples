@@ -51,8 +51,8 @@ fun getRanges(maxLenth: Int, limitPageBytes: Int): List<IntRange> {
     val numberRangeElements = maxLenth / limitRange
     return (1..numberRangeElements).map {
         when (it) {
-            1 -> 0..limitRange
-            else -> (it * limitRange - limitRange)..it * limitRange
+            1 -> 0 until limitRange
+            else -> (it * limitRange - limitRange) until it * limitRange
         }
     }
 }
