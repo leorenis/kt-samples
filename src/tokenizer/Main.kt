@@ -1,8 +1,7 @@
 package tokenizer
 
-import java.util.*
+import java.util.StringTokenizer
 import kotlin.math.roundToInt
-
 
 const val PAGE = """"
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
@@ -18,14 +17,13 @@ fun main (){
 }
 
 fun randomContentPage(fullContent: String, limitPageBytes: Int):String {
-    val delimiter = " "
     val ranges = getRanges(fullContent.length, limitPageBytes)
     val computedRange = ranges.random()
     val startsWithZero = 0 in computedRange
     val contentToTokenizer = fullContent.slice(computedRange)
 
     val words = linkedSetOf<String>()
-    val tokens = StringTokenizer(contentToTokenizer, delimiter)
+    val tokens = StringTokenizer(contentToTokenizer)
     var iterator = 0
     while (tokens.hasMoreTokens()) {
         val currentToken = tokens.nextToken()
