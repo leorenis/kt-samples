@@ -1,5 +1,4 @@
 package tokenizer
-
 import java.util.StringTokenizer
 import kotlin.math.roundToInt
 
