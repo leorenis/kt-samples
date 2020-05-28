@@ -26,7 +26,7 @@ fun randomContentPage(fullContent: String, limitPageBytes: Int):String {
     var iterator = 0
     while (tokens.hasMoreTokens()) {
         val currentToken = tokens.nextToken()
-        val isInLimit = words.sumBy { it.length } < limitPageBytes
+        val isInLimit = words.sumBy { it.length } + (words.size -1) < limitPageBytes
         if ( isInLimit ){
             when {
                 startsWithZero -> words.add(currentToken)
@@ -34,8 +34,11 @@ fun randomContentPage(fullContent: String, limitPageBytes: Int):String {
             }
             iterator++
         }
-        else
+        else {
+            // println(words.sumBy { it.length } + words.size)
             break
+        }
+
     }
     return words.joinToString(" ")
 }
