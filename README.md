@@ -1,2 +1,3 @@
 # kt-samples
-Litle sample in kotlin.
+Litle sample in kotlin to explore #kotlinlang.
+
